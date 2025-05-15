@@ -1,6 +1,7 @@
 import { Send, PieChart, ArrowLeft, Globe, Link2, Ticket, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import useMobile from "@/hooks/use-mobile";
+import { useState } from "react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,18 +11,29 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const isMobile = useMobile();
 
-  // Define navigation items
+  // Define navigation items with active state
   const generalNavItems = [
-    { icon: <PieChart className="h-5 w-5" />, label: "Proxy", active: false },
-    { icon: <ArrowLeft className="h-5 w-5" />, label: "Bounce", active: false },
-    { icon: <Globe className="h-5 w-5" />, label: "Online check", active: true },
-    { icon: <Link2 className="h-5 w-5" />, label: "Affiliate system", active: false },
+    { id: "proxy", icon: <PieChart className="h-5 w-5" />, label: "Proxy", active: false },
+    { id: "bounce", icon: <ArrowLeft className="h-5 w-5" />, label: "Bounce", active: false },
+    { id: "online", icon: <Globe className="h-5 w-5" />, label: "Online check", active: true },
+    { id: "affiliate", icon: <Link2 className="h-5 w-5" />, label: "Affiliate system", active: false },
   ];
 
   const supportNavItems = [
-    { icon: <Ticket className="h-5 w-5" />, label: "Tickets", active: false },
-    { icon: <HelpCircle className="h-5 w-5" />, label: "FAQ", active: false },
+    { id: "tickets", icon: <Ticket className="h-5 w-5" />, label: "Tickets", active: false },
+    { id: "faq", icon: <HelpCircle className="h-5 w-5" />, label: "FAQ", active: false },
   ];
+
+  // State to track active item
+  const [activeItem, setActiveItem] = useState("online");
+
+  // Handler for navigation items
+  const handleNavItemClick = (id: string) => {
+    setActiveItem(id);
+    if (isMobile) {
+      onClose();
+    }
+  };
 
   return (
     <>
@@ -51,14 +63,20 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <p className="text-xs uppercase text-neutral-300 tracking-wider mb-2">GENERAL</p>
           <nav>
             <ul className="space-y-1">
-              {generalNavItems.map((item, index) => (
-                <li key={index}>
+              {generalNavItems.map((item) => (
+                <li key={item.id}>
                   <a 
                     href="#" 
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition",
-                      item.active ? "bg-primary-light" : "hover:bg-primary-light"
+                      "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all",
+                      activeItem === item.id 
+                        ? "bg-primary-light" 
+                        : "hover:bg-primary-dark hover:bg-opacity-50"
                     )}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavItemClick(item.id);
+                    }}
                   >
                     {item.icon}
                     <span>{item.label}</span>
@@ -73,14 +91,20 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <p className="text-xs uppercase text-neutral-300 tracking-wider mb-2">SUPPORT</p>
           <nav>
             <ul className="space-y-1">
-              {supportNavItems.map((item, index) => (
-                <li key={index}>
+              {supportNavItems.map((item) => (
+                <li key={item.id}>
                   <a 
                     href="#" 
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition",
-                      item.active ? "bg-primary-light" : "hover:bg-primary-light"
+                      "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all",
+                      activeItem === item.id 
+                        ? "bg-primary-light" 
+                        : "hover:bg-primary-dark hover:bg-opacity-50"
                     )}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavItemClick(item.id);
+                    }}
                   >
                     {item.icon}
                     <span>{item.label}</span>

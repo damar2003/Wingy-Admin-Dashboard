@@ -1,33 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-interface BonusNotificationProps {
+interface WelcomeCardProps {
   username: string;
-  daysForFree: number;
-  onActivate: () => void;
 }
 
-export default function BonusNotification({ 
-  username, 
-  daysForFree, 
-  onActivate 
-}: BonusNotificationProps) {
+export default function WelcomeCard({ 
+  username 
+}: WelcomeCardProps) {
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-0">
         <div className="bg-white rounded-xl shadow-sm p-6 flex">
           <div className="flex-1">
-            <h3 className="text-lg font-medium">You have bonus, {username}!</h3>
+            <h3 className="text-lg font-medium">Welcome, {username}!</h3>
             <p className="text-neutral-300 text-sm mb-4">
-              We have a gift for you - {daysForFree} days for free!
+              Here's your dashboard overview for today
             </p>
-            
-            <Button 
-              onClick={onActivate}
-              className="bg-secondary hover:bg-secondary-dark text-white"
-            >
-              Activate bonus
-            </Button>
           </div>
           
           <div className="hidden md:block">

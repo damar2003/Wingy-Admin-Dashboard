@@ -1,14 +1,15 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
-import BonusNotification from "./BonusNotification";
+import WelcomeCard from "./BonusNotification";
 import TrafficOverview from "./TrafficOverview";
 import PackageTransactions from "./PackageTransactions";
 import TotalPrice from "./TotalPrice";
 import CountryStats from "./CountryStats";
 import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
+import { Bell, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useMobile from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/use-auth";
 
 interface DashboardProps {
   data: any;
@@ -19,6 +20,7 @@ interface DashboardProps {
 export default function Dashboard({ data, selectedDay, onDaySelect }: DashboardProps) {
   const isMobile = useMobile();
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
+  const { username, logout } = useAuth();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -32,7 +34,7 @@ export default function Dashboard({ data, selectedDay, onDaySelect }: DashboardP
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto p-4 lg:p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header with package ID and user info */}
+          {/* Header with user info */}
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-2">
               {isMobile && (
@@ -46,7 +48,7 @@ export default function Dashboard({ data, selectedDay, onDaySelect }: DashboardP
                   <span className="sr-only">Toggle Menu</span>
                 </Button>
               )}
-              <h2 className="text-lg font-semibold text-gray-800">Package ID {data?.packageId || '1480'}</h2>
+              <h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
             </div>
             
             <div className="flex items-center gap-4">
@@ -55,11 +57,21 @@ export default function Dashboard({ data, selectedDay, onDaySelect }: DashboardP
                 <span className="sr-only">Notifications</span>
               </Button>
               
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="text-neutral-300 hover:text-neutral-400"
+                onClick={logout}
+              >
+                <LogOut className="h-5 w-5" />
+                <span className="sr-only">Logout</span>
+              </Button>
+              
               {/* User avatar */}
               <Avatar className="h-8 w-8 bg-secondary">
                 <AvatarImage src={data?.user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=John"} alt="User" />
                 <AvatarFallback className="bg-secondary text-white">
-                  {data?.user?.name?.charAt(0) || 'A'}
+                  {username?.charAt(0) || data?.user?.name?.charAt(0) || 'A'}
                 </AvatarFallback>
               </Avatar>
             </div>
@@ -69,13 +81,8 @@ export default function Dashboard({ data, selectedDay, onDaySelect }: DashboardP
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column (2/3 width on large screens) */}
             <div className="lg:col-span-2 space-y-6">
-              <BonusNotification 
-                username={data?.user?.name || 'Anthony'}
-                daysForFree={data?.bonus?.days || 3}
-                onActivate={() => {
-                  // Handle bonus activation
-                  console.log('Bonus activated');
-                }}
+              <WelcomeCard 
+                username={username || data?.user?.name || 'User'}
               />
               
               <TrafficOverview 
