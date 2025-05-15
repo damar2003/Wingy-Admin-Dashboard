@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
-import WelcomeCard from "./BonusNotification";
+import WelcomeCard from "./AdminWelcomeNote";
 import TrafficOverview from "./TrafficOverview";
 import PackageTransactions from "./PackageTransactions";
 import TotalPrice from "./TotalPrice";

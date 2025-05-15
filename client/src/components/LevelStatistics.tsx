@@ -1,120 +1,123 @@
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend, ChartData, ChartDataset } from "chart.js";
 
-type TimeRange = "day" | "week" | "month" | "year";
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend);
 
+// Add prop type for refreshKey
 interface LevelStatisticsProps {
-  className?: string;
+  refreshKey?: number;
 }
 
-interface LevelStats {
-  totalLevels?: number;
-  totalUsers?: number;
-  levels?: Record<string, number>;
-}
-
-export default function LevelStatistics({ className }: LevelStatisticsProps) {
-  const [range, setRange] = useState<TimeRange>("week");
-  const [levelStats, setLevelStats] = useState<LevelStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export default function LevelStatistics({ refreshKey }: LevelStatisticsProps) {
+  const [range, setRange] = useState("week");
+  const [chartData, setChartData] = useState<ChartData<"line"> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    setIsLoading(true);
-    fetch(`https://w-v2.glitch.me/statics/levelStats?range=${range}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch level stats');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setLevelStats(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching level stats:", error);
-        setLevelStats(null);
-        setIsLoading(false);
-      });
-  }, [range]);
+    const fetchData = async () => {
+      setLoading(true);
+      setError("");
 
-  const timeRanges: { value: TimeRange; label: string }[] = [
-    { value: "day", label: "Today" },
-    { value: "week", label: "This Week" },
-    { value: "month", label: "This Month" },
-    { value: "year", label: "This Year" }
-  ];
-  
-  // Helper function to get the human-readable label for a range
-  const getRangeLabel = (rangeValue: TimeRange): string => {
-    const rangeItem = timeRanges.find(item => item.value === rangeValue);
-    return rangeItem?.label || rangeValue;
-  };
+      try {
+        const response = await axios.get(`https://w-v2.glitch.me/statics/levelStats?range=${range}`);
+        console.log("API Response:", response);
+
+        if (response.data && response.data.chartData) {
+          const data = response.data.chartData;
+          const labels = Object.keys(data);
+          const values = Object.values(data) as number[];
+          const maxValue = Math.max(...values);
+          const scaleFactor = maxValue >= 1000 ? 1000 : 1;
+          const unit = scaleFactor === 1000 ? "k" : "";
+
+          const datasets: ChartDataset<"line">[] = [
+            {
+              label: `Levels Played (${unit})`,
+              data: values.map((value) => value / scaleFactor),
+              borderColor: "#4F46E5",
+              backgroundColor: "rgba(79, 70, 229, 0.2)",
+              tension: 0.4,
+            },
+          ];
+
+          setChartData({ labels, datasets });
+        } else {
+          console.error("Invalid data format:", response.data);
+          throw new Error("Invalid data format");
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to fetch data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [range, refreshKey]); // Add refreshKey to dependencies
 
   return (
-    <Card className={cn("overflow-hidden level-statistics", className)}>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>Level Statistics</CardTitle>
-        
-        <div className="flex text-sm">
-          {timeRanges.map((timeRange) => (
-            <Button
-              key={timeRange.value}
-              variant="ghost"
-              className={cn(
-                "px-3 py-1 h-auto",
-                range === timeRange.value 
-                  ? "text-secondary border-b-2 border-secondary" 
-                  : "text-neutral-300"
-              )}
-              onClick={() => setRange(timeRange.value)}
-            >
-              {timeRange.label}
-            </Button>
-          ))}
+    <div className="p-6 border border-gray-200 rounded-lg bg-white shadow-md dark:bg-black">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Level Statistics</h3>
+        <select
+          value={range}
+          onChange={(e) => setRange(e.target.value)}
+          className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary dark:bg-blue-900 dark:text-white dark:border-blue-900 dark:placeholder-gray-400 dark:focus:ring-blue-800 dark:focus:border-blue-800"
+        >
+          <option value="week">Week</option>
+          <option value="month">Month</option>
+          <option value="year">Year</option>
+        </select>
+      </div>
+      {loading && <p className="text-gray-500 dark:text-gray-300">Loading...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {chartData && (
+        <div style={{ maxHeight: "300px", minHeight: "300px", overflow: "hidden", background: document.documentElement.classList.contains('dark') ? '#1e293b' : 'white', borderRadius: '0.75rem' }}>
+          <Line
+            data={{
+              ...chartData,
+              datasets: chartData.datasets.map(ds => ({
+                ...ds,
+                borderColor: document.documentElement.classList.contains('dark') ? '#60a5fa' : ds.borderColor,
+                backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(96,165,250,0.2)' : ds.backgroundColor,
+              }))
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  labels: {
+                    color: document.documentElement.classList.contains('dark') ? '#fff' : '#1e293b',
+                  }
+                },
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    color: document.documentElement.classList.contains('dark') ? '#fff' : '#1e293b',
+                  },
+                  grid: {
+                    color: document.documentElement.classList.contains('dark') ? '#334155' : '#e5e7eb',
+                  }
+                },
+                y: {
+                  ticks: {
+                    color: document.documentElement.classList.contains('dark') ? '#fff' : '#1e293b',
+                  },
+                  grid: {
+                    color: document.documentElement.classList.contains('dark') ? '#334155' : '#e5e7eb',
+                  }
+                }
+              }
+            }}
+          />
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4">
-          {isLoading ? (
-            <>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <div className="h-16 w-16 rounded-full bg-gray-200 animate-pulse mb-4"></div>
-                <div className="h-6 w-28 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-                <div className="h-4 w-36 bg-gray-200 animate-pulse rounded-md"></div>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <div className="h-16 w-16 rounded-full bg-gray-200 animate-pulse mb-4"></div>
-                <div className="h-6 w-28 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-                <div className="h-4 w-36 bg-gray-200 animate-pulse rounded-md"></div>
-              </div>
-            </>
-          ) : levelStats ? (
-            <>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-4">
-                  <span className="text-2xl font-bold text-white">{range.charAt(0).toUpperCase()}</span>
-                </div>
-                <h3 className="text-3xl font-bold">{levelStats.totalLevels?.toLocaleString() || '0'}</h3>
-                <p className="text-neutral-400">Total Levels Played</p>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center mb-4">
-                  <span className="text-2xl font-bold text-white">U</span>
-                </div>
-                <h3 className="text-3xl font-bold">{levelStats.totalUsers?.toLocaleString() || '0'}</h3>
-                <p className="text-neutral-400">{getRangeLabel(range)}</p>
-              </div>
-            </>
-          ) : (
-            <div className="col-span-2 flex items-center justify-center p-8 text-neutral-400">
-              No data available for this time range
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 }

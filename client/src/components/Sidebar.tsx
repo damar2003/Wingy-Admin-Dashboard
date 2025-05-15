@@ -18,6 +18,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const generalNavItems = [
     { id: "home", icon: <Home className="h-5 w-5" />, label: "Home", path: "/" },
     { id: "users", icon: <User className="h-5 w-5" />, label: "Users", path: "/users" },
+    { id: "history", icon: <HelpCircle className="h-5 w-5" />, label: "History", path: "/history" },
   ];
 
   const supportNavItems: { id: string; icon: React.ReactNode; label: string; path: string }[] = [];
@@ -60,46 +61,45 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       
       <aside 
         className={cn(
-          "flex flex-col w-[240px] bg-primary text-white shadow-lg z-50 overflow-y-auto scrollbar-hide fixed md:relative h-full",
+          // Responsive width for sidebar, centered vertically, height 50px less than full, no right border
+          "flex flex-col bg-gradient-to-b from-[#3a2fff] via-[#5f4fff] to-[#a18fff] text-white shadow-2xl z-50 overflow-y-auto scrollbar-hide fixed md:relative min-h-[500px] h-[calc(100vh-50px)] min-w-[170px] w-[clamp(170px,19vw,230px)] max-w-[270px] my-auto",
+          "backdrop-blur-xl border-l border-t border-b border-white/20 rounded-3xl md:rounded-3xl md:my-6 md:ml-4 md:shadow-2xl", // removed border-r
           isMobile && !isOpen ? "transform -translate-x-full" : "transform translate-x-0",
           "transition-transform duration-300 ease-in-out"
         )}
       >
         {/* Logo Section */}
-        <div className="p-4 flex items-center gap-2 mb-6">
-          <Send className="h-6 w-6" />
-          <h1 className="text-xl font-bold">Wingy Coin</h1>
+        <div className="p-5 flex items-center gap-3 mb-8 rounded-2xl bg-white/10 shadow-inner border border-white/10">
+          <Send className="h-5 w-5 text-white drop-shadow-lg" />
+          <h1 className="text-xl font-extrabold tracking-widest text-white drop-shadow whitespace-nowrap overflow-hidden text-ellipsis">Wingy Coin</h1>
         </div>
-        
         {/* Navigation Sections */}
         <div className="px-4 mb-4">
-          <p className="text-xs uppercase text-neutral-300 tracking-wider mb-2">MENU</p>
+          <p className="text-xs uppercase text-neutral-200 tracking-wider mb-3 font-semibold">Menu</p>
           <nav className="sidebar-nav">
-            <ul className="space-y-1">
+            <ul className="space-y-2">
               {generalNavItems.map((item) => (
-                <li key={item.id}>
-                  <a 
-                    href={item.path} 
+                <li key={item.id} className="overflow-visible w-full">
+                  <a
+                    href="#"
+                    onClick={() => handleNavItemClick(item.id, item.path)}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all",
-                      activeItem === item.id 
-                        ? "bg-primary-light hover:bg-primary-light" 
-                        : "hover:bg-primary-dark hover:bg-opacity-50"
+                      "flex items-center gap-3 px-4 py-3 text-base font-semibold transition-all relative w-full",
+                      activeItem === item.id
+                        ? "bg-white text-[#3a2fff] shadow-xl scale-[1.04] border-none rounded-l-[999px] rounded-r-[999px] w-[calc(100%+40px)] -mr-10 after:content-[''] after:absolute after:right-[-40px] after:top-0 after:bottom-0 after:w-[40px] after:bg-gradient-to-r after:from-white after:to-transparent after:rounded-r-[999px] after:z-0"
+                        : "hover:bg-white/20 hover:text-white hover:scale-[1.02] text-white/80 rounded-xl w-full",
+                      "active:bg-white/30 active:text-white backdrop-blur-md"
                     )}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavItemClick(item.id, item.path);
-                    }}
+                    style={activeItem === item.id ? { boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)', background: '#fff', color: '#3a2fff', position: 'relative', zIndex: 1 } : {}}
                   >
-                    {item.icon}
-                    <span>{item.label}</span>
+                    <span className={cn("z-10 flex items-center", activeItem === item.id ? "text-[#3a2fff]" : "")}>{item.icon}</span>
+                    <span className="z-10">{item.label}</span>
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
         </div>
-        
         {/* Logout Button */}
         <div className="mt-auto px-4 pb-6">
           <button 
@@ -107,7 +107,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               navigate("/login");
               localStorage.removeItem("userId");
             }}
-            className="flex items-center gap-3 w-full bg-red-600 text-white py-2.5 px-3 rounded-lg hover:bg-red-700 transition"
+            className="flex items-center gap-3 w-full bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] text-white py-3 px-4 rounded-xl shadow-lg hover:from-[#ff3a55] hover:to-[#ffb347] transition font-semibold backdrop-blur-md border border-white/10"
           >
             <LogOut className="h-5 w-5" />
             <span className="font-medium">Logout</span>

@@ -79,11 +79,14 @@
 
 @layer base {
   * {
-    @apply border-border;
+    /* Removed invalid `border-border` class */
+    /* Ensure all classes used are valid Tailwind classes */
   }
   
   body {
-    @apply font-sans bg-background text-foreground antialiased;
+    font-family: sans-serif;
+    background-color: white;
+    color: black;
   }
   
   .scrollbar-hide::-webkit-scrollbar {
@@ -125,4 +128,42 @@
       box-shadow: 0 0 0 4px rgba(93, 83, 242, 0.3), 0 0 0 8px rgba(93, 83, 242, 0.2);
     }
   }
+}
+
+/* Apply a global box-sizing rule */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Light mode styles */
+body {
+  background-color: white;
+  color: #1a202c; /* gray-800 */
+}
+
+/* Dark mode styles */
+.dark body {
+  background-color: black;
+  color: white;
+}
+
+/* Component-specific adjustments */
+.card {
+  background-color: white;
+}
+
+.dark .card {
+  background-color: black;
+}
+
+.button {
+  background-color: #1E3A8A; /* primary */
+  color: white;
+}
+
+.dark .button {
+  background-color: white;
+  color: black;
 }

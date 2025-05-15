@@ -9,6 +9,7 @@ import HomePage from "@/pages/HomePage";
 import UsersPage from "@/pages/UsersPage";
 import LoginPage from "@/pages/LoginPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import HistoryPage from "./pages/HistoryPage";
 
 function Router() {
   const [location, setLocation] = useLocation();
@@ -35,6 +36,13 @@ function Router() {
         {() => (
           <ProtectedRoute>
             <UsersPage />
+          </ProtectedRoute>
+        )}
+      </Route>
+      <Route path="/history">
+        {() => (
+          <ProtectedRoute>
+            <HistoryPage />
           </ProtectedRoute>
         )}
       </Route>

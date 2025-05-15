@@ -1,8 +1,13 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  darkMode: ["class"],
-  content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: 'class',
+  content: [
+    "./client/src/**/*.{js,ts,jsx,tsx}",
+    "./client/index.html",
+    "./client/src/components/**/*.{js,ts,jsx,tsx}",
+    "./client/src/pages/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
       borderRadius: {
@@ -22,8 +27,9 @@ export default {
           foreground: "hsl(var(--popover-foreground))",
         },
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: '#1E3A8A', // Blue
+          light: '#3B82F6',
+          dark: '#1E40AF',
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

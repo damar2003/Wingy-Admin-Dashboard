@@ -52,7 +52,7 @@ export default function UserStatistics({ className }: UserStatisticsProps) {
             ) : (
               <p className="text-sm text-red-500">Failed to load user count</p>
             )}
-            <p className="text-sm text-neutral-300">Registered accounts</p>
+            <p className="text-blue-600 text-sm mb-4">Registered accounts</p>
           </div>
         </div>
       </CardContent>

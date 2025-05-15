@@ -1,20 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-interface WelcomeCardProps {
+interface AdminWelcomeNoteProps {
   username: string;
 }
 
-export default function WelcomeCard({ 
+export default function AdminWelcomeNote({ 
   username 
-}: WelcomeCardProps) {
+}: AdminWelcomeNoteProps) {
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-0">
         <div className="bg-white rounded-xl shadow-sm p-6 flex">
           <div className="flex-1">
             <h3 className="text-lg font-medium">Welcome, {username}!</h3>
-            <p className="text-neutral-300 text-sm mb-4">
+            <p className="text-neutral-600 text-sm mb-4">
               Here's your dashboard overview for today
             </p>
           </div>
