@@ -1,7 +1,7 @@
 import { Send, PieChart, ArrowLeft, Globe, Link2, Ticket, HelpCircle, Home, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import useMobile from "@/hooks/use-mobile";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
 
 interface SidebarProps {
@@ -40,11 +40,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   
   // State to track active item
   const [activeItem, setActiveItem] = useState(getActiveItem());
-  
-  // Update active item when location changes
-  useEffect(() => {
-    setActiveItem(getActiveItem());
-  }, [location]);
 
   // Handler for navigation items
   const handleNavItemClick = (id: string, path: string) => {
