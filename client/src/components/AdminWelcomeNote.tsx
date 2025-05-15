@@ -20,7 +20,7 @@ export default function AdminWelcomeNote({
           </div>
           
           <div className="hidden md:block">
-            <img src="/assets/icon.png" alt="Admin Icon" className="h-28 w-auto" />
+            <img src="/client/assets/icon.png" alt="Admin Icon" className="h-28 w-auto" />
           </div>
         </div>
       </CardContent>
