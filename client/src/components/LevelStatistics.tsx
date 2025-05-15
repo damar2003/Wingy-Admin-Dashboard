@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts";
 import { cn } from "@/lib/utils";
 
 type TimeRange = "day" | "week" | "month" | "year";
@@ -10,14 +9,9 @@ interface LevelStatisticsProps {
   className?: string;
 }
 
-interface LevelStat {
-  level: number;
-  count: number;
-}
-
 export default function LevelStatistics({ className }: LevelStatisticsProps) {
   const [range, setRange] = useState<TimeRange>("week");
-  const [levelStats, setLevelStats] = useState<LevelStat[] | null>(null);
+  const [totalCount, setTotalCount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,18 +24,14 @@ export default function LevelStatistics({ className }: LevelStatisticsProps) {
         return response.json();
       })
       .then((data) => {
-        // Convert to format suitable for chart
-        const formattedData = Object.entries(data).map(([level, count]) => ({
-          level: parseInt(level),
-          count: count as number
-        })).sort((a, b) => a.level - b.level);
-        
-        setLevelStats(formattedData);
+        // Calculate total count of users across all levels
+        const sum = Object.values(data).reduce((acc: number, count: any) => acc + count, 0);
+        setTotalCount(sum);
         setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching level stats:", error);
-        setLevelStats(null);
+        setTotalCount(null);
         setIsLoading(false);
       });
   }, [range]);
@@ -52,19 +42,6 @@ export default function LevelStatistics({ className }: LevelStatisticsProps) {
     { value: "month", label: "This Month" },
     { value: "year", label: "This Year" }
   ];
-
-  // Custom tooltip
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-3 border border-gray-200 shadow-sm rounded-md">
-          <p className="font-semibold">Level {payload[0].payload.level}</p>
-          <p className="text-secondary">Users: {payload[0].value}</p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <Card className={cn("overflow-hidden", className)}>
@@ -90,39 +67,26 @@ export default function LevelStatistics({ className }: LevelStatisticsProps) {
         </div>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
-          <div className="h-48 w-full bg-gray-100 animate-pulse rounded-md flex items-center justify-center">
-            <p className="text-neutral-300">Loading statistics...</p>
-          </div>
-        ) : levelStats && levelStats.length > 0 ? (
-          <div className="h-48 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={levelStats}
-                margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis 
-                  dataKey="level" 
-                  label={{ value: 'Level', position: 'insideBottomRight', offset: -5 }}
-                  tick={{ fontSize: 12, fill: '#A0A3BD' }}
-                />
-                <YAxis label={{ value: 'Users', angle: -90, position: 'insideLeft' }} hide />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar 
-                  dataKey="count" 
-                  fill="hsl(var(--secondary))" 
-                  radius={[4, 4, 0, 0]}
-                  className="hover:opacity-80 transition-opacity"
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        ) : (
-          <div className="h-48 w-full flex items-center justify-center">
-            <p className="text-neutral-300">No data available for this time range</p>
-          </div>
-        )}
+        <div className="flex items-center justify-center p-8">
+          {isLoading ? (
+            <div className="flex flex-col items-center">
+              <div className="h-16 w-16 rounded-full bg-gray-200 animate-pulse mb-4"></div>
+              <div className="h-8 w-32 bg-gray-200 animate-pulse rounded-md"></div>
+            </div>
+          ) : totalCount !== null ? (
+            <div className="flex flex-col items-center">
+              <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-4">
+                <span className="text-2xl font-bold text-white">{range.charAt(0).toUpperCase()}</span>
+              </div>
+              <h3 className="text-3xl font-bold">{totalCount.toLocaleString()}</h3>
+              <p className="text-neutral-400">Total users for this period</p>
+            </div>
+          ) : (
+            <div className="text-neutral-400">
+              No data available for this time range
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

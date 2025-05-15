@@ -5,8 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect } from "react";
 import NotFound from "@/pages/not-found";
-import DashboardPage from "@/pages/DashboardPage";
 import HomePage from "@/pages/HomePage";
+import UsersPage from "@/pages/UsersPage";
 import LoginPage from "@/pages/LoginPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
@@ -31,10 +31,10 @@ function Router() {
           </ProtectedRoute>
         )}
       </Route>
-      <Route path="/dashboard">
+      <Route path="/users">
         {() => (
           <ProtectedRoute>
-            <DashboardPage />
+            <UsersPage />
           </ProtectedRoute>
         )}
       </Route>

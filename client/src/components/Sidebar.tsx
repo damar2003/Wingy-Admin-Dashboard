@@ -83,7 +83,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all",
                       activeItem === item.id 
-                        ? "bg-primary-light" 
+                        ? "bg-primary-light hover:bg-primary-light" 
                         : "hover:bg-primary-dark hover:bg-opacity-50"
                     )}
                     onClick={(e) => {
