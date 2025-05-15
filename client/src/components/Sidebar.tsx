@@ -1,7 +1,8 @@
-import { Send, PieChart, ArrowLeft, Globe, Link2, Ticket, HelpCircle } from "lucide-react";
+import { Send, PieChart, ArrowLeft, Globe, Link2, Ticket, HelpCircle, Home, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import useMobile from "@/hooks/use-mobile";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,26 +11,49 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const isMobile = useMobile();
+  const [, navigate] = useLocation();
 
   // Define navigation items with active state
   const generalNavItems = [
-    { id: "proxy", icon: <PieChart className="h-5 w-5" />, label: "Proxy", active: false },
-    { id: "bounce", icon: <ArrowLeft className="h-5 w-5" />, label: "Bounce", active: false },
-    { id: "online", icon: <Globe className="h-5 w-5" />, label: "Online check", active: true },
-    { id: "affiliate", icon: <Link2 className="h-5 w-5" />, label: "Affiliate system", active: false },
+    { id: "home", icon: <Home className="h-5 w-5" />, label: "Home", path: "/" },
+    { id: "dashboard", icon: <BarChart3 className="h-5 w-5" />, label: "Dashboard", path: "/dashboard" },
+    { id: "proxy", icon: <PieChart className="h-5 w-5" />, label: "Proxy", path: "#" },
+    { id: "bounce", icon: <ArrowLeft className="h-5 w-5" />, label: "Bounce", path: "#" },
+    { id: "online", icon: <Globe className="h-5 w-5" />, label: "Online check", path: "#" },
+    { id: "affiliate", icon: <Link2 className="h-5 w-5" />, label: "Affiliate system", path: "#" },
   ];
 
   const supportNavItems = [
-    { id: "tickets", icon: <Ticket className="h-5 w-5" />, label: "Tickets", active: false },
-    { id: "faq", icon: <HelpCircle className="h-5 w-5" />, label: "FAQ", active: false },
+    { id: "tickets", icon: <Ticket className="h-5 w-5" />, label: "Tickets", path: "#" },
+    { id: "faq", icon: <HelpCircle className="h-5 w-5" />, label: "FAQ", path: "#" },
   ];
 
+  // Get current path to determine active item
+  const [location] = useLocation();
+  
+  // Find active item based on current location
+  const getActiveItem = () => {
+    // Remove leading slash and return
+    const path = location === "/" ? "home" : location.substring(1);
+    return generalNavItems.some(item => item.id === path) || supportNavItems.some(item => item.id === path) ? path : "home";
+  };
+  
   // State to track active item
-  const [activeItem, setActiveItem] = useState("online");
+  const [activeItem, setActiveItem] = useState(getActiveItem());
+  
+  // Update active item when location changes
+  useEffect(() => {
+    setActiveItem(getActiveItem());
+  }, [location]);
 
   // Handler for navigation items
-  const handleNavItemClick = (id: string) => {
+  const handleNavItemClick = (id: string, path: string) => {
     setActiveItem(id);
+    
+    if (path && path !== "#") {
+      navigate(path);
+    }
+    
     if (isMobile) {
       onClose();
     }
@@ -66,7 +90,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               {generalNavItems.map((item) => (
                 <li key={item.id}>
                   <a 
-                    href="#" 
+                    href={item.path} 
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all",
                       activeItem === item.id 
@@ -75,7 +99,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     )}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleNavItemClick(item.id);
+                      handleNavItemClick(item.id, item.path);
                     }}
                   >
                     {item.icon}
@@ -94,7 +118,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               {supportNavItems.map((item) => (
                 <li key={item.id}>
                   <a 
-                    href="#" 
+                    href={item.path} 
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all",
                       activeItem === item.id 
@@ -103,7 +127,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     )}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleNavItemClick(item.id);
+                      handleNavItemClick(item.id, item.path);
                     }}
                   >
                     {item.icon}

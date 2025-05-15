@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect } from "react";
 import NotFound from "@/pages/not-found";
 import DashboardPage from "@/pages/DashboardPage";
+import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/LoginPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
@@ -24,6 +25,13 @@ function Router() {
     <Switch>
       <Route path="/login" component={LoginPage} />
       <Route path="/">
+        {() => (
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        )}
+      </Route>
+      <Route path="/dashboard">
         {() => (
           <ProtectedRoute>
             <DashboardPage />
