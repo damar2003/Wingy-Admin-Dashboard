@@ -9,9 +9,15 @@ interface LevelStatisticsProps {
   className?: string;
 }
 
+interface LevelStats {
+  totalLevels?: number;
+  totalUsers?: number;
+  levels?: Record<string, number>;
+}
+
 export default function LevelStatistics({ className }: LevelStatisticsProps) {
   const [range, setRange] = useState<TimeRange>("week");
-  const [totalCount, setTotalCount] = useState<number | null>(null);
+  const [levelStats, setLevelStats] = useState<LevelStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -24,14 +30,12 @@ export default function LevelStatistics({ className }: LevelStatisticsProps) {
         return response.json();
       })
       .then((data) => {
-        // Calculate total count of users across all levels
-        const sum = Object.values(data).reduce((acc: number, count: any) => acc + count, 0);
-        setTotalCount(sum);
+        setLevelStats(data);
         setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching level stats:", error);
-        setTotalCount(null);
+        setLevelStats(null);
         setIsLoading(false);
       });
   }, [range]);
@@ -42,6 +46,12 @@ export default function LevelStatistics({ className }: LevelStatisticsProps) {
     { value: "month", label: "This Month" },
     { value: "year", label: "This Year" }
   ];
+  
+  // Helper function to get the human-readable label for a range
+  const getRangeLabel = (rangeValue: TimeRange): string => {
+    const rangeItem = timeRanges.find(item => item.value === rangeValue);
+    return rangeItem?.label || rangeValue;
+  };
 
   return (
     <Card className={cn("overflow-hidden", className)}>
@@ -67,22 +77,39 @@ export default function LevelStatistics({ className }: LevelStatisticsProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-center p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4">
           {isLoading ? (
-            <div className="flex flex-col items-center">
-              <div className="h-16 w-16 rounded-full bg-gray-200 animate-pulse mb-4"></div>
-              <div className="h-8 w-32 bg-gray-200 animate-pulse rounded-md"></div>
-            </div>
-          ) : totalCount !== null ? (
-            <div className="flex flex-col items-center">
-              <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-4">
-                <span className="text-2xl font-bold text-white">{range.charAt(0).toUpperCase()}</span>
+            <>
+              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                <div className="h-16 w-16 rounded-full bg-gray-200 animate-pulse mb-4"></div>
+                <div className="h-6 w-28 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+                <div className="h-4 w-36 bg-gray-200 animate-pulse rounded-md"></div>
               </div>
-              <h3 className="text-3xl font-bold">{totalCount.toLocaleString()}</h3>
-              <p className="text-neutral-400">Total users for this period</p>
-            </div>
+              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                <div className="h-16 w-16 rounded-full bg-gray-200 animate-pulse mb-4"></div>
+                <div className="h-6 w-28 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+                <div className="h-4 w-36 bg-gray-200 animate-pulse rounded-md"></div>
+              </div>
+            </>
+          ) : levelStats ? (
+            <>
+              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-4">
+                  <span className="text-2xl font-bold text-white">{range.charAt(0).toUpperCase()}</span>
+                </div>
+                <h3 className="text-3xl font-bold">{levelStats.totalLevels?.toLocaleString() || '0'}</h3>
+                <p className="text-neutral-400">Total levels available</p>
+              </div>
+              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center mb-4">
+                  <span className="text-2xl font-bold text-white">U</span>
+                </div>
+                <h3 className="text-3xl font-bold">{levelStats.totalUsers?.toLocaleString() || '0'}</h3>
+                <p className="text-neutral-400">Users for {getRangeLabel(range)}</p>
+              </div>
+            </>
           ) : (
-            <div className="text-neutral-400">
+            <div className="col-span-2 flex items-center justify-center p-8 text-neutral-400">
               No data available for this time range
             </div>
           )}
