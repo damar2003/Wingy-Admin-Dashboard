@@ -98,14 +98,14 @@ export default function LevelStatistics({ className }: LevelStatisticsProps) {
                   <span className="text-2xl font-bold text-white">{range.charAt(0).toUpperCase()}</span>
                 </div>
                 <h3 className="text-3xl font-bold">{levelStats.totalLevels?.toLocaleString() || '0'}</h3>
-                <p className="text-neutral-400">Total levels available</p>
+                <p className="text-neutral-400">Total Levels Played</p>
               </div>
               <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
                 <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center mb-4">
                   <span className="text-2xl font-bold text-white">U</span>
                 </div>
                 <h3 className="text-3xl font-bold">{levelStats.totalUsers?.toLocaleString() || '0'}</h3>
-                <p className="text-neutral-400">Users for {getRangeLabel(range)}</p>
+                <p className="text-neutral-400">{getRangeLabel(range)}</p>
               </div>
             </>
           ) : (

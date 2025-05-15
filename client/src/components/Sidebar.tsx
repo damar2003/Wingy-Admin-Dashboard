@@ -107,7 +107,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               navigate("/login");
               localStorage.removeItem("userId");
             }}
-            className="flex items-center gap-3 w-full bg-primary-dark text-white py-2.5 px-3 rounded-lg hover:bg-opacity-90 transition"
+            className="flex items-center gap-3 w-full bg-red-600 text-white py-2.5 px-3 rounded-lg hover:bg-red-700 transition"
           >
             <LogOut className="h-5 w-5" />
             <span className="font-medium">Logout</span>
