@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, ArrowRight } from "lucide-react";
+import { X, ArrowRight, HelpCircle } from "lucide-react";
 
 interface TutorialStep {
   title: string;
@@ -9,7 +9,11 @@ interface TutorialStep {
   target?: string; // CSS selector to highlight
 }
 
-export default function TutorialOverlay() {
+interface TutorialOverlayProps {
+  showHelpButton?: boolean;
+}
+
+export default function TutorialOverlay({ showHelpButton = true }: TutorialOverlayProps) {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [hasSeenTutorial, setHasSeenTutorial] = useState(false);
@@ -100,8 +104,32 @@ export default function TutorialOverlay() {
     };
   }, [currentStep, open]);
 
-  if (hasSeenTutorial) {
+  // Function to restart tutorial
+  const restartTutorial = () => {
+    setCurrentStep(0);
+    setOpen(true);
+    setHasSeenTutorial(false);
+    localStorage.removeItem('tutorial_seen');
+  };
+
+  // If user has seen tutorial and help button is not shown, return null
+  if (hasSeenTutorial && !showHelpButton) {
     return null;
+  }
+  
+  // If user has seen tutorial but we want to show the help button
+  if (hasSeenTutorial && showHelpButton) {
+    return (
+      <div className="fixed bottom-4 right-4 z-50">
+        <Button 
+          className="rounded-full w-12 h-12 bg-primary text-white shadow-md hover:shadow-lg"
+          onClick={restartTutorial}
+        >
+          <HelpCircle className="h-6 w-6" />
+          <span className="sr-only">Help</span>
+        </Button>
+      </div>
+    );
   }
 
   return (

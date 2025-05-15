@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/use-auth";
 import WelcomeCard from "@/components/BonusNotification";
 import UserStatistics from "@/components/UserStatistics";
 import LevelStatistics from "@/components/LevelStatistics";
+import TutorialOverlay from "@/components/TutorialOverlay";
 import { Bell, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,6 +21,9 @@ export default function HomePage() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-neutral-50">
+      {/* Tutorial Overlay */}
+      <TutorialOverlay />
+      
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={toggleSidebar} />
 
