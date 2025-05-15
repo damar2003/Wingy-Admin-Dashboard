@@ -74,7 +74,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Navigation Sections */}
         <div className="px-4 mb-4">
           <p className="text-xs uppercase text-neutral-300 tracking-wider mb-2">MENU</p>
-          <nav>
+          <nav className="sidebar-nav">
             <ul className="space-y-1">
               {generalNavItems.map((item) => (
                 <li key={item.id}>

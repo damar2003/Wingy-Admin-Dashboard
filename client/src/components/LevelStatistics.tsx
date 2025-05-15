@@ -54,7 +54,7 @@ export default function LevelStatistics({ className }: LevelStatisticsProps) {
   };
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
+    <Card className={cn("overflow-hidden level-statistics", className)}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>Level Statistics</CardTitle>
         

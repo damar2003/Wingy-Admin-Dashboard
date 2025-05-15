@@ -9,6 +9,7 @@ interface UserStatisticsProps {
 }
 
 export default function UserStatistics({ className }: UserStatisticsProps) {
+  const combinedClassName = `user-statistics ${className || ""}`;
   const [userCount, setUserCount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,7 +34,7 @@ export default function UserStatistics({ className }: UserStatisticsProps) {
   }, []);
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
+    <Card className={cn("overflow-hidden", combinedClassName)}>
       <CardHeader>
         <CardTitle>Total Users</CardTitle>
       </CardHeader>
