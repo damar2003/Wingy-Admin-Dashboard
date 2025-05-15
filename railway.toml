@@ -1,0 +1,7 @@
+# Railway deployment configuration for Vite + React (client only)
+[build]
+  command = "npm install && npm run build"
+  publish = "client/dist"
+
+[deploy]
+  start = "npm run preview --prefix client"
