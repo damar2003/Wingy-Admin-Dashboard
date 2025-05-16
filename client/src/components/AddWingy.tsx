@@ -19,7 +19,7 @@ export default function AddWingy() {
     }
 
     try {
-      const response = await axios.post("https://w-v2.glitch.me/adminaddwingy", {
+      const response = await axios.post("https://w-v3.glitch.me/adminaddwingy", {
         adminuserid: adminUserId,
         username,
         amount,

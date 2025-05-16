@@ -14,7 +14,7 @@ export default function TotalRedeemsCard() {
       setError("");
 
       try {
-        const response = await axios.get("https://w-v2.glitch.me/statics/allredeem");
+        const response = await axios.get("https://w-v3.glitch.me/statics/allredeem");
         setTotalRedeemed(response.data.totalRedeemed);
         setRedeemCount(response.data.redeemCount);
       } catch (err) {

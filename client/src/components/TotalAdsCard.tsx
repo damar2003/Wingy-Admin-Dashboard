@@ -13,7 +13,7 @@ export default function TotalAdsCard() {
       setError("");
 
       try {
-        const response = await axios.get("https://w-v2.glitch.me/statics/allads");
+        const response = await axios.get("https://w-v3.glitch.me/statics/allads");
         setTotalAds(response.data.totalAds);
       } catch (err) {
         console.error("Error fetching total ads:", err);

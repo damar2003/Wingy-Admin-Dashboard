@@ -15,7 +15,7 @@ export default function UserStatistics({ className }: UserStatisticsProps) {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch('https://w-v2.glitch.me/statics/allUsers/')
+    fetch('https://w-v3.glitch.me/statics/allUsers/')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch user count');

@@ -22,7 +22,7 @@ export default function LevelStatistics({ refreshKey }: LevelStatisticsProps) {
       setError("");
 
       try {
-        const response = await axios.get(`https://w-v2.glitch.me/statics/levelStats?range=${range}`);
+        const response = await axios.get(`https://w-v3.glitch.me/statics/levelStats?range=${range}`);
         console.log("API Response:", response);
 
         if (response.data && response.data.chartData) {

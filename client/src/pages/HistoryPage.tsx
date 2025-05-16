@@ -24,7 +24,7 @@ export default function HistoryPage() {
       }
 
       try {
-        const response = await axios.get(`https://w-v2.glitch.me/admin-history/${adminUserId}`);
+        const response = await axios.get(`https://w-v3.glitch.me/admin-history/${adminUserId}`);
         setHistory(response.data.history || []);
       } catch (err) {
         setError("Failed to fetch history.");

@@ -9,7 +9,7 @@ export default function TotalWingyCard() {
   useEffect(() => {
     const fetchTotalWingy = async () => {
       try {
-        const response = await axios.get("https://w-v2.glitch.me/statics/allWingy");
+        const response = await axios.get("https://w-v3.glitch.me/statics/allWingy");
         setTotalWingy(response.data.totalWingy);
       } catch (err) {
         setError("Failed to fetch total Wingy.");

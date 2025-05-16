@@ -31,10 +31,10 @@ export default function UsersPage() {
     try {
       const endpoint =
         searchType === "username"
-          ? `https://w-v2.glitch.me/username/${searchInput}`
+          ? `https://w-v3.glitch.me/username/${searchInput}`
           : searchType === "userId"
-          ? `https://w-v2.glitch.me/user/${searchInput}`
-          : `https://w-v2.glitch.me/balancebydiscord/${searchInput}`;
+          ? `https://w-v3.glitch.me/user/${searchInput}`
+          : `https://w-v3.glitch.me/balancebydiscord/${searchInput}`;
 
       const response = await axios.get(endpoint);
       setUser(response.data.user);

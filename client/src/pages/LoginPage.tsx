@@ -29,7 +29,7 @@ export default function LoginPage() {
     
     try {
       // First authenticate the user
-      const response = await fetch('https://w-v2.glitch.me/login', {
+      const response = await fetch('https://w-v3.glitch.me/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export default function LoginPage() {
       const data = await response.json();
       
       // Then check if user is admin
-      const adminCheckResponse = await fetch(`https://w-v2.glitch.me/admin-check/${data.user.id}`);
+      const adminCheckResponse = await fetch(`https://w-v3.glitch.me/admin-check/${data.user.id}`);
       
       if (adminCheckResponse.status !== 200) {
         throw new Error('You are not authorized to access the dashboard.');

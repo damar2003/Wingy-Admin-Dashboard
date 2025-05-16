@@ -28,7 +28,7 @@ export function useAuth() {
       
       try {
         // Verify if user is still an admin
-        const response = await fetch(`https://w-v2.glitch.me/admin-check/${storedUserId}`);
+        const response = await fetch(`https://w-v3.glitch.me/admin-check/${storedUserId}`);
         
         if (!response.ok) {
           throw new Error('Authentication failed');
