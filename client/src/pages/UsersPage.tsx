@@ -8,6 +8,7 @@ import useMobile from "@/hooks/use-mobile";
 import { Card, CardContent } from "@/components/ui/card";
 import axios from "axios";
 import AddWingy from "@/components/AddWingy";
+import VerifyDiscord from "@/components/VerifyDiscord";
 
 export default function UsersPage() {
   const isMobile = useMobile();
@@ -138,6 +139,11 @@ export default function UsersPage() {
             {/* Add Wingy Section */}
             <div className="mb-6">
               <AddWingy />
+            </div>
+
+            {/* Verify Username with discordId */}
+            <div className="mb-6">
+              <VerifyDiscord />
             </div>
           </div>
         </div>

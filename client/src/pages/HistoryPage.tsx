@@ -6,7 +6,7 @@ import axios from "axios";
 export default function HistoryPage() {
   const isMobile = useMobile();
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
-  const [history, setHistory] = useState<{ _id: string; recived_user: string; Action: string; wingy?: number; createdAt: string }[]>([]);
+  const [history, setHistory] = useState<{ _id: string; recived_user: string; Action: string; wingy?: number; discordId?: string; createdAt: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -80,6 +80,11 @@ export default function HistoryPage() {
                       {record.wingy && (
                         <p className="text-md text-gray-600">
                           <span className="text-primary">Wingy:</span> {record.wingy}
+                        </p>
+                      )}
+                      {record.discordId && (
+                        <p className="text-md text-gray-600">
+                          <span className="text-primary">Discord Id:</span> {record.discordId}
                         </p>
                       )}
                       <div className="flex justify-between items-end mt-4">

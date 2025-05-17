@@ -20,7 +20,7 @@ export default function AdminWelcomeNote({
           </div>
           
           <div className="hidden md:block">
-            <img src="https://cdn.discordapp.com/attachments/1362358409621540935/1372704078110392320/icon.png?ex=6827bdcb&is=68266c4b&hm=a8a6e379e171a5fdd5106bf53b46e13ff300e316ffbc18a48b8e34ba8cbea9b1&" alt="Admin Icon" className="h-28 w-auto" />
+             <img src="https://cdn.discordapp.com/attachments/1362358409621540935/1372704078110392320/icon.png?ex=6827bdcb&is=68266c4b&hm=a8a6e379e171a5fdd5106bf53b46e13ff300e316ffbc18a48b8e34ba8cbea9b1&" alt="Admin Icon" className="h-28 w-auto" />
           </div>
         </div>
       </CardContent>
